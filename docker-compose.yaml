@@ -15,9 +15,10 @@ mysql2:
    - MYSQL_DATABASE=kingshard
 
 kingshard:
-  image: kingshard
+  image: matjazmav/kingshard
+#  image: mritd/kingshard
   volumes:
-    - .:/go/src/github.com/flike/kingshard/etc
+    - ./ks1.yaml:/etc/ks.yaml
   ports:
     - "9696:9696"
   expose:
@@ -25,5 +26,3 @@ kingshard:
   links:
     - mysql1
     - mysql2
-  entrypoint: ./etc/wait-for-it.sh mysql2:3306 -- kingshard " -config=./etc/ks1.yaml"
-
