@@ -16,7 +16,6 @@ mysql2:
 
 kingshard:
   image: matjazmav/kingshard
-#  image: mritd/kingshard
   volumes:
     - ./ks1.yaml:/etc/ks.yaml
   ports:
