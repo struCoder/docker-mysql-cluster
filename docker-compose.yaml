@@ -1,29 +1,44 @@
-mysql1:
-  image: mysql:latest
-  expose:
-   - "3306"
-  environment:
-   - MYSQL_ROOT_PASSWORD=123456
-   - MYSQL_DATABASE=kingshard
-
-mysql2:
-  image: mysql:latest
-  expose:
-   - "3306"
-  environment:
-   - MYSQL_ROOT_PASSWORD=123456
-   - MYSQL_DATABASE=kingshard
-
-kingshard:
-  image: kingshard
-  volumes:
-    - .:/go/src/github.com/flike/kingshard/etc
-  ports:
-    - "9696:9696"
-  expose:
-    - "9696"
-  links:
-    - mysql1
-    - mysql2
-  entrypoint: ./etc/wait-for-it.sh mysql2:3306 -- kingshard " -config=./etc/ks1.yaml"
-
+version: '2'
+networks:
+  default:
+    external:
+      name: testwifi
+services:
+    mysql1:
+      container_name: "mysql1"
+      image: mysql:latest
+      volumes:
+          - ./${MYSQL1_SAVE_PATH}:/var/lib/mysql
+      expose:
+          - "3306"
+      environment:
+          - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
+          - MYSQL_DATABASE=${DATABASE}
+      restart: always
+    
+    mysql2:
+      container_name: "mysql2"
+      image: mysql:latest
+      volumes:
+          - ./${MYSQL2_SAVE_PATH}:/var/lib/mysql
+      expose:
+          - "3306"
+      environment:
+          - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
+          - MYSQL_DATABASE=${DATABASE}
+      restart: always
+    
+    kingshard:
+      container_name: "kingshard"
+      image: mysql:latest
+      image: matjazmav/kingshard
+      volumes:
+          - ./ks1.yaml:/etc/ks.yaml
+      ports:
+          - "9696:9696"
+      expose:
+          - "9696"
+      links:
+          - mysql1
+          - mysql2
+      restart: always
