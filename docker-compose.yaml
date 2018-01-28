@@ -1,27 +1,33 @@
-mysql1:
-  image: mysql:latest
-  expose:
-   - "3306"
-  environment:
-   - MYSQL_ROOT_PASSWORD=123456
-   - MYSQL_DATABASE=kingshard
-
-mysql2:
-  image: mysql:latest
-  expose:
-   - "3306"
-  environment:
-   - MYSQL_ROOT_PASSWORD=123456
-   - MYSQL_DATABASE=kingshard
-
-kingshard:
-  image: matjazmav/kingshard
-  volumes:
-    - ./ks1.yaml:/etc/ks.yaml
-  ports:
-    - "9696:9696"
-  expose:
-    - "9696"
-  links:
-    - mysql1
-    - mysql2
+version: '2'
+networks:
+  default:
+    external:
+      name: testwifi
+services:
+    mysql1:
+      image: mysql:latest
+      expose:
+       - "3306"
+      environment:
+       - MYSQL_ROOT_PASSWORD=123456
+       - MYSQL_DATABASE=kingshard
+    
+    mysql2:
+      image: mysql:latest
+      expose:
+       - "3306"
+      environment:
+       - MYSQL_ROOT_PASSWORD=123456
+       - MYSQL_DATABASE=kingshard
+    
+    kingshard:
+      image: matjazmav/kingshard
+      volumes:
+        - ./ks1.yaml:/etc/ks.yaml
+      ports:
+        - "9696:9696"
+      expose:
+        - "9696"
+      links:
+        - mysql1
+        - mysql2
